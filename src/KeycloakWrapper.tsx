@@ -3,22 +3,14 @@ import { createBrowserHistory } from 'history';
 
 // !--------- KEYCLOAK IMPORT -------------
 import { ReactKeycloakProvider } from '@react-keycloak/web';
-// import keycloak from './keycloak';
+import keycloak from './keycloak';
 import AppWrapper from './AppWrapper';
-import Keycloak from 'keycloak-js';
 
 const defaultHistory = createBrowserHistory();
 
-const KeycloakWrapper = ({ history = defaultHistory, config }) => {
+const KeycloakWrapper = ({ history = defaultHistory }) => {
     // !--------- REMOVE KEYCLOAK CODE -------------
-
-    const keycloak = new Keycloak({
-        url: `${config.keyCloakUrl}auth/`,
-        realm: `${config.keyCloakRealm}`,
-        clientId: `${config.keyCloakClientId}`,
-    });
-
-    const setTokens = () => {
+    const setTokens = (): void => {
         const { token, refreshToken, idTokenParsed } = keycloak;
         if (token && refreshToken && idTokenParsed) {
             sessionStorage.setItem('react-token', token);
@@ -27,10 +19,10 @@ const KeycloakWrapper = ({ history = defaultHistory, config }) => {
         }
     };
 
-    const refreshAccessToken = () => {
+    const refreshAccessToken = (): void => {
         keycloak
             .updateToken(50)
-            .success((refreshed) => {
+            .success((refreshed: boolean) => {
                 if (refreshed) {
                     setTokens();
                 }
@@ -41,7 +33,7 @@ const KeycloakWrapper = ({ history = defaultHistory, config }) => {
             });
     };
 
-    const handleEvent = (event) => {
+    const handleEvent = (event: string): void => {
         if (event === 'onAuthSuccess') {
             setTokens();
         }
@@ -64,7 +56,7 @@ const KeycloakWrapper = ({ history = defaultHistory, config }) => {
             }}
             authClient={keycloak}
             onEvent={handleEvent}>
-            <AppWrapper history={history} config={config} />
+            <AppWrapper history={history} />
         </ReactKeycloakProvider>
     );
 };
