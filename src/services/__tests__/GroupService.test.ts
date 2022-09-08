@@ -1,6 +1,4 @@
 import {
-    GET_GROUPS_ENDPOINT,
-    START_PROCESS_ENDPOINT,
     getGroups,
     getGroupById,
     handleGroupAction,
@@ -40,21 +38,21 @@ describe('getGroups', () => {
     };
     test('fetches successfully data from an API', async () => {
         mockedRequest.get.mockResolvedValue(successResponse(data));
-        const result = await getGroups();
+        const result = await getGroups(10, 2, 'api', 'groupName', 'desc', 'xyz');
         expect(mockedRequest.get).toHaveBeenCalledTimes(1);
         expect(result).toEqual(successResponse(data));
     });
 
     test('getGroups() should call wilth proper Request URL', async () => {
-        await getGroups(10, 2, 'groupName', 'desc', 'xyz');
+        await getGroups(10, 2, 'api', 'groupName', 'desc', 'xyz');
         expect(mockedRequest.get).toHaveBeenCalledWith(
-            `${GET_GROUPS_ENDPOINT}?size=10&page=2&sort-by=groupName:desc&q=xyz`,
+            `api/accounts/v1/groups?size=10&page=2&sort-by=groupName:desc&q=xyz`,
         );
     });
 
     test('fetches erroneously data from an API', async () => {
         mockedRequest.get.mockResolvedValue(errorResponse());
-        const result = await getGroups();
+        const result = await getGroups(10, 2, 'api', 'groupName', 'desc', 'xyz');
         expect(result).toEqual(errorResponse());
     });
 });
@@ -68,15 +66,15 @@ describe('getGroupById', () => {
     };
     test('fetches successfully data from an API', async () => {
         mockedRequest.get.mockResolvedValue(successResponse(data));
-        const result = await getGroupById('123');
+        const result = await getGroupById('123', 'api');
         expect(mockedRequest.get).toHaveBeenCalledTimes(1);
-        expect(mockedRequest.get).toHaveBeenCalledWith(`${GET_GROUPS_ENDPOINT}/123`);
+        expect(mockedRequest.get).toHaveBeenCalledWith('api/accounts/v1/groups/123');
         expect(result).toEqual(successResponse(data));
     });
 
     test('fetches erroneously data from an API', async () => {
         mockedRequest.get.mockResolvedValue(errorResponse());
-        const result = await getGroupById('123');
+        const result = await getGroupById('123', 'api');
         expect(result).toEqual(errorResponse());
     });
 });
@@ -105,15 +103,15 @@ describe('Add Group testing', () => {
 
     test('fetches successfully data from an API', async () => {
         mockedRequest.post.mockResolvedValue(successResponse(groupData));
-        const result = await handleGroupAction('add', null, groupData);
+        const result = await handleGroupAction('add', 'api', null, groupData);
         expect(mockedRequest.post).toHaveBeenCalledTimes(1);
-        expect(mockedRequest.post).toHaveBeenCalledWith(START_PROCESS_ENDPOINT, reqObj);
+        expect(mockedRequest.post).toHaveBeenCalledWith('api/workflow/v1/process/start', reqObj);
         expect(result).toEqual({ success: true, message: 'Group details submitted successfully' });
     });
 
     test('fetches erroneously data from an API', async () => {
         mockedRequest.post.mockResolvedValue(errorResponse());
-        const result = await handleGroupAction('add', null, groupData);
+        const result = await handleGroupAction('add', 'api', null, groupData);
         expect(mockedRequest.post).toHaveBeenCalledTimes(1);
         expect(result).toEqual(errorResponse());
     });
@@ -147,15 +145,15 @@ describe('Edit Group testing', () => {
 
     test('fetches successfully data from an API', async () => {
         mockedRequest.post.mockResolvedValue(successResponse(groupData));
-        const result = await handleGroupAction('update', '456', groupData);
+        const result = await handleGroupAction('update', 'api', '456', groupData);
         expect(mockedRequest.post).toHaveBeenCalledTimes(1);
-        expect(mockedRequest.post).toHaveBeenCalledWith(START_PROCESS_ENDPOINT, reqObj);
+        expect(mockedRequest.post).toHaveBeenCalledWith('api/workflow/v1/process/start', reqObj);
         expect(result).toEqual({ success: true, message: 'Group updated successfully' });
     });
 
     test('fetches erroneously data from an API', async () => {
         mockedRequest.post.mockResolvedValue(errorResponse());
-        const result = await handleGroupAction('update', null, groupData);
+        const result = await handleGroupAction('update', 'api', null, groupData);
         expect(mockedRequest.post).toHaveBeenCalledTimes(1);
         expect(result).toEqual(errorResponse());
     });
@@ -188,15 +186,15 @@ describe('Delete Group testing', () => {
 
     test('fetches successfully data from an API', async () => {
         mockedRequest.post.mockResolvedValue(successResponse({}));
-        const result = await handleGroupAction('delete', '456', groupData);
+        const result = await handleGroupAction('delete', 'api', '456', groupData);
         expect(mockedRequest.post).toHaveBeenCalledTimes(1);
-        expect(mockedRequest.post).toHaveBeenCalledWith(START_PROCESS_ENDPOINT, reqObj);
+        expect(mockedRequest.post).toHaveBeenCalledWith('api/workflow/v1/process/start', reqObj);
         expect(result).toEqual({ success: true, message: 'Group deleted successfully' });
     });
 
     test('fetches erroneously data from an API', async () => {
         mockedRequest.post.mockResolvedValue(errorResponse());
-        const result = await handleGroupAction('delete', '456', groupData);
+        const result = await handleGroupAction('delete', 'api', '456', groupData);
         expect(mockedRequest.post).toHaveBeenCalledTimes(1);
         expect(result).toEqual(errorResponse());
     });

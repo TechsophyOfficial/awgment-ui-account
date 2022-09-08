@@ -17,21 +17,18 @@ const PrivateRoute = ({ component: Component, ...restProps }): React.ReactElemen
         />
     );
 };
-const getBase = (currentLocation: string) => {
-    console.log('currentLocation', currentLocation);
-    const container = `${process.env.REACT_APP_MFE_CONTAINER_BASENAME}`;
-    console.log('container env', container);
+const getBase = (currentLocation: string, config: any) => {
+    const container = `${config.mfeContainerBasename}`;
     if (container) {
-        const url = currentLocation.includes(container) ? container : process.env.PUBLIC_URL;
-        console.log('selected url', url);
+        const url = currentLocation.includes(container) ? container : config.publicAccountsUrl;
         return url;
     }
-    return process.env.PUBLIC_URL;
+    return config.publicAccountsUrl;
 };
-const Navigator = ({ history }: any): React.ReactElement => {
+const Navigator = ({ history, config }: any): React.ReactElement => {
     // const { keycloak, initialized } = useKeycloak();
     // if (initialized && keycloak.authenticated) {
-    const basename = getBase(window.location.href);
+    const basename = getBase(window.location.href, config);
     return (
         <>
             <BrowserRouter basename={basename}>

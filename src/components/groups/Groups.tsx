@@ -16,6 +16,7 @@ import ConfirmationContext from '../../contexts/confirmationContext/confirmation
 import SpinnerContext from '../../contexts/spinnerContext/spinner-context';
 import DataList from 'tsf_datalist/dist/components/dataList';
 import Popup from 'tsf_popup/dist/components/popup';
+import AppConfig from '../../appConfig';
 
 const actions = [
     {
@@ -43,10 +44,11 @@ const Groups = () => {
     const [editGroupData, setEditGroupData] = useState<GroupData | null>(null);
     const [isAddGroupModal, setIsAddGroupModal] = useState<boolean>(false);
     const [isEditGroupModal, setIsEditGroupModal] = useState<boolean>(false);
+    const appData = useContext<any>(AppConfig);
 
     useEffect(() => {
         const fetchGroupForm = async () => {
-            const { addGroupForm, editGroupForm } = await generateGroupForm();
+            const { addGroupForm, editGroupForm } = await generateGroupForm(appData?.apiGatewayUrl);
             setAddGroupForm(addGroupForm);
             setEditGroupForm(editGroupForm);
         };
@@ -61,7 +63,7 @@ const Groups = () => {
                 success,
                 data,
                 message = '',
-            } = await getGroups(noOfRows, pageNo, orderBy, orderDirection, searchBy);
+            } = await getGroups(noOfRows, pageNo, appData?.apiGatewayUrl, orderBy, orderDirection, searchBy);
             closeSpinner();
             if (success && data) {
                 const { totalElements, page: currentPage, size, content } = data;
@@ -112,7 +114,11 @@ const Groups = () => {
         orderBy = sortBy,
         orderDirection = sortDirection,
     ) => {
-        const { success, data, message = '' } = await getGroups(noOfRows, pageNo, orderBy, orderDirection, searchBy);
+        const {
+            success,
+            data,
+            message = '',
+        } = await getGroups(noOfRows, pageNo, appData?.apiGatewayUrl, orderBy, orderDirection, searchBy);
         if (success && data) {
             const { totalElements, size, page, content } = data;
             const updateData = { recordsCount: totalElements, page: page, rowsPerPage: size, records: content };
@@ -136,7 +142,14 @@ const Groups = () => {
     };
 
     const handleSearch = async (searchTerm: string): Promise<void> => {
-        const { success, data } = await getGroups(rowsPerPage, 1, sortBy, sortDirection, searchTerm);
+        const { success, data } = await getGroups(
+            rowsPerPage,
+            1,
+            appData?.apiGatewayUrl,
+            sortBy,
+            sortDirection,
+            searchTerm,
+        );
         if (success && data) {
             const { totalElements, page, size, content } = data;
             updateGroupTableData({
@@ -152,7 +165,7 @@ const Groups = () => {
 
     const handleEditGroupAction = async ({ id }: GroupData) => {
         openSpinner();
-        const { success, data } = await getGroupById(id);
+        const { success, data } = await getGroupById(id, appData?.apiGatewayUrl);
         closeSpinner();
         if (success && data) {
             setEditGroupData(data);
@@ -183,7 +196,7 @@ const Groups = () => {
                 userData = { name: entry?.name, groupId: entry?.groupId, description: entry?.description };
             }
             openSpinner();
-            const { success, message = '' } = await handleGroupAction(action, id, userData);
+            const { success, message = '' } = await handleGroupAction(action, appData?.apiGatewayUrl, id, userData);
             if (success) {
                 closePopup();
                 await fetchAllGroups(rowsPerPage, page);

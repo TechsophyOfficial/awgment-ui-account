@@ -49,12 +49,13 @@ interface GroupActionReqObjProps {
     };
 }
 
-export const GET_GROUPS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${GROUPS}`;
-export const START_PROCESS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${START_PROCESS}`;
+// export const GET_GROUPS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${GROUPS}`;
+// export const START_PROCESS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${START_PROCESS}`;
 
 export const getGroups = async (
     rowsPerPage = 5,
     page = 1,
+    apiUrl: string,
     sortBy?: string,
     sortDirection?: 'asc' | 'desc',
     searchTerm?: string,
@@ -62,7 +63,7 @@ export const getGroups = async (
     const sort = sortBy && sortDirection ? `&sort-by=${sortBy}:${sortDirection}` : '';
     const search = searchTerm ? `&q=${searchTerm}` : '';
     const r: ResponseProps = (await request.get(
-        `${GET_GROUPS_ENDPOINT}?size=${rowsPerPage}&page=${page}${sort}${search}`,
+        `${apiUrl}${GROUPS}?size=${rowsPerPage}&page=${page}${sort}${search}`,
     )) as ResponseProps;
     if (r && r.success) {
         const data: GroupTableData = r.data as GroupTableData;
@@ -71,8 +72,11 @@ export const getGroups = async (
     return { success: false, message: r && r.message };
 };
 
-export const getGroupById = async (id: string): Promise<{ success: boolean; message?: string; data?: GroupData }> => {
-    const r: ResponseProps = (await request.get(`${GET_GROUPS_ENDPOINT}/${id}`)) as ResponseProps;
+export const getGroupById = async (
+    id: string,
+    apiUrl: string,
+): Promise<{ success: boolean; message?: string; data?: GroupData }> => {
+    const r: ResponseProps = (await request.get(`${apiUrl}${GROUPS}/${id}`)) as ResponseProps;
     if (r.success) {
         const data: GroupData = r.data as GroupData;
         return { success: true, message: r.message, data: data };
@@ -82,6 +86,7 @@ export const getGroupById = async (id: string): Promise<{ success: boolean; mess
 
 export const handleGroupAction = async (
     action: Action,
+    apiUrl: string,
     id?: string | null,
     groupData?: FormioSubmissionData | null,
 ): Promise<{ success: boolean; message?: string }> => {
@@ -134,6 +139,7 @@ export const handleGroupAction = async (
         reqObj = generateReqObj(id, id, deleteObj);
     }
 
+    const START_PROCESS_ENDPOINT = `${apiUrl}${START_PROCESS}`;
     const res: ResponseProps = (await request.post(START_PROCESS_ENDPOINT, reqObj)) as ResponseProps;
     if (res.success) {
         return { success: true, message: successMessage };

@@ -45,12 +45,13 @@ interface AddOrEditOrDeleteUserReqObjProps {
     };
 }
 
-export const GET_USERS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${USERS}`;
-export const START_PROCESS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${START_PROCESS}`;
+// export const GET_USERS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${USERS}`;
+// export const START_PROCESS_ENDPOINT = `${process.env.REACT_APP_API_GATEWAY_URL}${START_PROCESS}`;
 
 export const getAllUsers = async (
     rowsPerPage = 5,
     page = 1,
+    apiUrl: string,
     sortBy?: string,
     sortDirection?: 'asc' | 'desc',
     searchTerm?: string,
@@ -58,7 +59,7 @@ export const getAllUsers = async (
     const sort = sortBy && sortDirection ? `&sort-by=${sortBy}:${sortDirection}` : '';
     const search = searchTerm ? `&q=${searchTerm}` : '';
     const r: ResponseProps = (await request.get(
-        `${GET_USERS_ENDPOINT}?only-mandatory-fields=true&size=${rowsPerPage}&page=${page}${sort}${search}`,
+        `${apiUrl}${USERS}?only-mandatory-fields=true&size=${rowsPerPage}&page=${page}${sort}${search}`,
     )) as ResponseProps;
     if (r && r.success) {
         const data: UserInfo = r.data as UserInfo;
@@ -69,8 +70,9 @@ export const getAllUsers = async (
 
 export const getUserDetails = async (
     id: string,
+    apiUrl: string,
 ): Promise<{ success: boolean; message?: string; data?: EditUserDataResponse }> => {
-    const r: ResponseProps = (await request.get(`${GET_USERS_ENDPOINT}/${id}`)) as ResponseProps;
+    const r: ResponseProps = (await request.get(`${apiUrl}${USERS}/${id}`)) as ResponseProps;
     if (r && r.success) {
         const data: EditUserDataResponse = r.data as EditUserDataResponse;
         return { success: true, message: r.message, data: data };
@@ -80,6 +82,7 @@ export const getUserDetails = async (
 
 export const addOrEditOrDeleteUser = async (
     action: 'add' | 'update' | 'delete',
+    apiUrl: string,
     id?: string | null,
     userData?: FormioSubmissionData | null,
     userName?: string | null,
@@ -122,6 +125,7 @@ export const addOrEditOrDeleteUser = async (
         reqObj = generateReqObj(userName, id, null);
     }
 
+    const START_PROCESS_ENDPOINT = `${apiUrl}${START_PROCESS}`;
     const res: ResponseProps = (await request.post(START_PROCESS_ENDPOINT, reqObj)) as ResponseProps;
     debugger;
     if (res.success) {
