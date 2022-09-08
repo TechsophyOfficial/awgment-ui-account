@@ -1,7 +1,6 @@
 import wretch from 'wretch';
 import { ResponseChain } from 'wretch/dist/resolver';
-// import keycloak from './keycloak';
-import { useKeycloak } from '@react-keycloak/web';
+import keycloak from './keycloak';
 
 export interface ResponseProps {
     success?: boolean;
@@ -15,7 +14,7 @@ const callAPI = async (w: ResponseChain): Promise<ApiResponse> => {
     return w
         .unauthorized((_error) => {
             sessionStorage.clear();
-            // keycloak.logout();
+            keycloak.logout();
             return {
                 success: false,
                 message: 'Please login...',

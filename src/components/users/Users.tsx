@@ -18,7 +18,6 @@ import ConfirmationContext from '../../contexts/confirmationContext/confirmation
 import SpinnerContext from '../../contexts/spinnerContext/spinner-context';
 import DataList from 'tsf_datalist/dist/components/dataList';
 import MfeDataContext from '../../contexts/mfeDataContext copy/mfeData-context';
-import AppConfig from '../../appConfig';
 
 const actions = [
     {
@@ -50,15 +49,10 @@ const Users = () => {
     const [editUserData, setEditUserData] = useState<EditUserDataResponse | null>(null);
     const [isAddUserModal, setIsAddUserModal] = useState<boolean>(false);
     const [isEditUserModal, setIsEditUserModal] = useState<boolean>(false);
-    const appData = useContext<any>(AppConfig);
 
     useEffect(() => {
         const fetchUserForm = async () => {
-            const { addUserFormioForm, editUserFormioForm } = await generateUserForm(
-                addFormId,
-                editFormId,
-                appData?.apiGatewayUrl,
-            );
+            const { addUserFormioForm, editUserFormioForm } = await generateUserForm(addFormId, editFormId);
             setAddUserForm(addUserFormioForm);
             setEditUserForm(editUserFormioForm);
         };
@@ -73,7 +67,7 @@ const Users = () => {
                 success,
                 data,
                 message = '',
-            } = await getAllUsers(noOfRows, pageNo, appData?.apiGatewayUrl, orderBy, orderDirection, searchBy);
+            } = await getAllUsers(noOfRows, pageNo, orderBy, orderDirection, searchBy);
             closeSpinner();
             if (success && data) {
                 const { totalElements, page: currentPage, size, content } = data;
@@ -119,11 +113,7 @@ const Users = () => {
     }, []);
 
     const handlePagingAndSorting = async (noOfRows, pageNo, orderBy = sortBy, orderDirection = sortDirection) => {
-        const {
-            success,
-            data,
-            message = '',
-        } = await getAllUsers(noOfRows, pageNo, appData?.apiGatewayUrl, orderBy, orderDirection, searchBy);
+        const { success, data, message = '' } = await getAllUsers(noOfRows, pageNo, orderBy, orderDirection, searchBy);
         if (success && data) {
             const { totalElements, size, page: currentPage, content } = data;
             const updateData = { recordsCount: totalElements, page: currentPage, rowsPerPage: size, records: content };
@@ -153,14 +143,7 @@ const Users = () => {
     // );
 
     const handleSearch = async (searchTerm: string): Promise<void> => {
-        const { success, data } = await getAllUsers(
-            rowsPerPage,
-            1,
-            appData?.apiGatewayUrl,
-            sortBy,
-            sortDirection,
-            searchTerm,
-        );
+        const { success, data } = await getAllUsers(rowsPerPage, 1, sortBy, sortDirection, searchTerm);
         if (success && data) {
             const { totalElements, page: currentPage, size, content } = data;
             updateUserTableData({
@@ -176,7 +159,7 @@ const Users = () => {
 
     const handleEditUserAction = async ({ id }: UserData) => {
         openSpinner();
-        const { success, data } = await getUserDetails(id, appData?.apiGatewayUrl);
+        const { success, data } = await getUserDetails(id);
         closeSpinner();
         if (success && data) {
             setEditUserData(data);
@@ -198,13 +181,7 @@ const Users = () => {
     const callAddOrEditOrDeleteAPI = useCallback(
         async (action, id = null, userData = null, userName = null) => {
             openSpinner();
-            const { success, message = '' } = await addOrEditOrDeleteUser(
-                action,
-                appData?.apiGatewayUrl,
-                id,
-                userData,
-                userName,
-            );
+            const { success, message = '' } = await addOrEditOrDeleteUser(action, id, userData, userName);
             if (success) {
                 closePopup();
                 await fetchAllUsers(rowsPerPage, page);

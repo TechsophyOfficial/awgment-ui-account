@@ -5,24 +5,20 @@ import ThemeProvider from './contexts/themeContext/ThemeState';
 import { MfeDataProps } from './contexts/mfeDataContext copy/mfeData-context';
 import MfeDataState from './contexts/mfeDataContext copy/MfeDataState';
 import { StyledEngineProvider } from '@mui/material';
-import AppConfig from './appConfig.js';
 
 interface AppProps {
     history: any;
     userTableData?: MfeDataProps;
-    config: any;
 }
 
-const App: React.FC<AppProps> = ({ history, userTableData, config }): React.ReactElement => {
+const App: React.FC<AppProps> = ({ history, userTableData }): React.ReactElement => {
     return (
         <MfeDataState>
             <StyledEngineProvider injectFirst>
                 <ThemeProvider>
-                    <AppConfig.Provider value={config}>
-                        <ContextProvider>
-                            <Navigator history={history} config={config} />
-                        </ContextProvider>
-                    </AppConfig.Provider>
+                    <ContextProvider>
+                        <Navigator history={history} />
+                    </ContextProvider>
                 </ThemeProvider>
             </StyledEngineProvider>
         </MfeDataState>
