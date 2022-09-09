@@ -18,7 +18,7 @@ const PrivateRoute = ({ component: Component, ...restProps }): React.ReactElemen
     );
 };
 const getBase = (currentLocation: string, config: any) => {
-    const container = `${config.mfeContainerBasename}`;
+    const container = `${config.mfeAccountContainerBaseName}`;
     if (container) {
         const url = currentLocation.includes(container) ? container : config.publicAccountsUrl;
         return url;
