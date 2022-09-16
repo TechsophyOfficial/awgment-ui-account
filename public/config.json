@@ -4,5 +4,5 @@
     "keyCloakRealm": "techsophy-platform",
     "keyCloakClientId": "tp-ui-core",
     "publicAccountsUrl": "/accounts",
-    "mfeFormContainerBaseName": "/model/accounts"
+    "mfeAccountContainerBaseName": "/model/accounts"
 }
