@@ -17,10 +17,8 @@ const PrivateRoute = ({ component: Component, ...restProps }): React.ReactElemen
         />
     );
 };
-const getBase = (currentLocation: string) => {
-    console.log('currentLocation', currentLocation);
-    const container = `${process.env.REACT_APP_MFE_CONTAINER_BASENAME}`;
-    console.log('container env', container);
+const getBase = (currentLocation: string, config: any) => {
+    const container = `${config.mfeAccountContainerBaseName}`;
     if (container) {
         const url = currentLocation.includes(container) ? container : process.env.PUBLIC_URL;
         console.log('selected url', url);

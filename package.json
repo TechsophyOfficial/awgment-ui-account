@@ -35,7 +35,8 @@
         "build:development": "env-cmd -f .env.development craco build",
         "build:qa": "env-cmd -f .env.qa craco build",
         "build:production": "env-cmd -f .env.production craco build",
-        "test": "craco test"
+        "test": "craco test",
+        "test-coverage": "craco test --env=jest-environment-jsdom-sixteen --coverage --watchAll"
     },
     "jest": {
         "collectCoverageFrom": [
@@ -78,6 +79,8 @@
         "eslint-plugin-prefer-arrow": "^1.2.2",
         "eslint-plugin-prettier": "^3.1.4",
         "fetch-mock": "^9.11.0",
+        "jest-environment-jsdom": "^29.0.3",
+        "jest-environment-jsdom-sixteen": "^1.0.3",
         "prettier": "^2.1.2",
         "typescript": "^3.9.7"
     }
