@@ -17,9 +17,6 @@ spec:
       containers:
       - image: tsdevopsteam/platform:account-ui-$BUILD_NUMBER
         name: account-ui
-        envFrom:
-        - configMapRef:
-            name: accountui-env
         ports:
         - containerPort: 80
       imagePullSecrets:
