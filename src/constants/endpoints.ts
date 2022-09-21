@@ -1,5 +1,5 @@
 export const START_PROCESS = '/workflow/v1/process/start';
-export const FORMS = '/form-runtime/v1/forms';
+export const FORMS = '/form-modeler/v1/forms';
 export const ROLES = '/accounts/v1/keycloak/roles';
 export const USERS = '/accounts/v1/users';
 export const GROUPS = '/accounts/v1/groups';
