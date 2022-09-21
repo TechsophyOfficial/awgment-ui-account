@@ -8,6 +8,7 @@ import SpinnerState from './contexts/spinnerContext/SpinnerState';
 import ThemeContext from './contexts/themeContext/theme-context';
 import UserState from './contexts/userContext/UserState';
 import { getSelectedTheme, ThemeProps } from './services/ThemeService';
+import Appconfig from './appConfig';
 
 declare module '@mui/styles/defaultTheme' {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -17,11 +18,12 @@ declare module '@mui/styles/defaultTheme' {
 const ContextProvider: React.FC<{ userTableData?: MfeDataProps }> = ({ children, userTableData }) => {
     const { theme, updateTheme } = useContext(ThemeContext);
     const { updateMfeData } = useContext(MfeDataContext);
+    const appData = useContext<any>(Appconfig);
     userTableData && updateMfeData(userTableData);
 
     useEffect(() => {
         const setTheme = async () => {
-            const selectedThemeRes = await getSelectedTheme();
+            const selectedThemeRes = await getSelectedTheme(appData?.apiGatewayUrl);
             if (selectedThemeRes.success) {
                 const selectedTheme = selectedThemeRes.data as ThemeProps;
                 updateTheme(selectedTheme);
