@@ -8,15 +8,20 @@ import { MfeDataProps } from './contexts/mfeDataContext copy/mfeData-context';
 import { Co2Sharp } from '@mui/icons-material';
 declare const window: any;
 
-window.renderAccountsMFE = (containerId: any, history, userTableData: MfeDataProps) => {
-    fetch('../accounts/config.json')
-        .then(async (r) => r.json())
-        .then((config) => {
-            ReactDOM.render(
-                <App config={config} userTableData={userTableData} history={history} />,
-                document.getElementById(containerId),
-            );
-        });
+window.renderAccountsMFE = (containerId: any, history, userTableData: MfeDataProps, config) => {
+    // fetch('../accounts/config.json')
+    //     .then(async (r) => r.json())
+    //     .then((config) => {
+    //         ReactDOM.render(
+    //             <App config={config} userTableData={userTableData} history={history} />,
+    //             document.getElementById(containerId),
+    //         );
+    //     });
+    console.log(config)
+    ReactDOM.render(
+        <App config={config} userTableData={userTableData} history={history} />,
+        document.getElementById(containerId),
+    );
     // ReactDOM.render(<App history={history} userTableData={userTableData} />, document.getElementById(containerId));
     serviceWorker.unregister();
 };
