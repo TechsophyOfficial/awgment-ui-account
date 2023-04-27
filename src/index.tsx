@@ -17,7 +17,7 @@ window.renderAccountsMFE = (containerId: any, history, userTableData: MfeDataPro
     //             document.getElementById(containerId),
     //         );
     //     });
-    console.log(config)
+    console.log(config);
     ReactDOM.render(
         <App config={config} userTableData={userTableData} history={history} />,
         document.getElementById(containerId),
