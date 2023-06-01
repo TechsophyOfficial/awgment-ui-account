@@ -6,9 +6,10 @@ import * as serviceWorker from './serviceWorker';
 import KeycloakWrapper from './KeycloakWrapper.jsx';
 import { MfeDataProps } from './contexts/mfeDataContext copy/mfeData-context';
 import { Co2Sharp } from '@mui/icons-material';
+
 declare const window: any;
 
-window.renderAccountsMFE = (containerId: any, history, userTableData: MfeDataProps, config) => {
+window.renderAccountsMFE = (containerId: any, history, config, userTableData: MfeDataProps) => {
     // fetch('../accounts/config.json')
     //     .then(async (r) => r.json())
     //     .then((config) => {
@@ -18,6 +19,7 @@ window.renderAccountsMFE = (containerId: any, history, userTableData: MfeDataPro
     //         );
     //     });
     console.log(config);
+    console.log(userTableData);
     ReactDOM.render(
         <App config={config} userTableData={userTableData} history={history} />,
         document.getElementById(containerId),
