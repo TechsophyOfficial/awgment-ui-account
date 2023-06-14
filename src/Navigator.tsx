@@ -28,7 +28,6 @@ const getBase = (currentLocation: string, config: any) => {
 const Navigator = ({ history, config }: any): React.ReactElement => {
     // const { keycloak, initialized } = useKeycloak();
     // if (initialized && keycloak.authenticated) {
-    console.log(config);
     const basename = getBase(window.location.href, config);
     return (
         <>
