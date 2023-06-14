@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-ui
+  namespace: awgment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: account-ui
+  template:
+    metadata:
+      labels:
+        name: account-ui
+    spec:
+      containers:
+      - image: tsdevopsteam/platform:MT-account-ui-$BUILD_NUMBER
+        name: account-ui
+        envFrom:
+        - configMapRef:
+            name: accountui-env
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: ts-platform
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-ui
+  namespace: awgment
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    name: account-ui
