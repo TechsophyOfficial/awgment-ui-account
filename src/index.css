@@ -29,3 +29,7 @@ html , body , #root{
 .choices__list--dropdown.is-active {
     display: block !important;
 }
+
+.MuiList-root {
+    display: grid;
+}
